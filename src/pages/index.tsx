@@ -1,50 +1,108 @@
 import { useState, useEffect } from "react";
-import { Slider } from "@nextui-org/react";
+import {
+  Slider,
+  Image,
+  CardHeader,
+  Card,
+  CardBody,
+  CardFooter,
+  Button,
+  image,
+} from "@nextui-org/react";
+import { MdLinkedCamera } from "react-icons/md";
 
 export default function IndexPage() {
-  const [value, setValue] = useState<any>(0);
+  const [capture, setCapture] = useState<any>(false);
+  const [encodedImage, setEncodedImage] = useState("");
 
   useEffect(() => {
-    const brightness = Math.round((255 * value) / 100);
-    const options = {
-      method: "PATCH",
-      body: JSON.stringify({ data: brightness }),
-    };
+    handleRequest();
+  }, []);
 
-    fetch(
-      "https://arduino-led-ed555-default-rtdb.asia-southeast1.firebasedatabase.app/pwm.json",
-      options
-    )
-      .then((response) => response.json())
-      .then((response) => console.log(response))
-      .catch((err) => console.error(err));
-  }, [value]);
+  const fetchImage = async () => {
+    const getResponse = await fetch(
+      "https://arduino-led-ed555-default-rtdb.asia-southeast1.firebasedatabase.app/capture.json"
+    );
+
+    const responseData = await getResponse.json();
+    const image = `data:image/png;base64,${responseData.base64}`;
+    console.log(image == encodedImage);
+    return image;
+  };
+
+  const handleRequest = async () => {
+    try {
+      // Send PATCH request
+      await fetch(
+        "https://arduino-led-ed555-default-rtdb.asia-southeast1.firebasedatabase.app/device.json",
+        {
+          method: "PATCH",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            // Your patch payload
+            takePhoto: 1,
+          }),
+        }
+      );
+
+      setCapture(true);
+      await new Promise((resolve) => setTimeout(resolve, 1000));
+
+      // Send GET request
+      let response = await fetchImage();
+      if (response == encodedImage) {
+        response = await fetchImage();
+      }
+
+      setEncodedImage(response);
+      setCapture(false);
+      await fetch(
+        "https://arduino-led-ed555-default-rtdb.asia-southeast1.firebasedatabase.app/device.json",
+        {
+          method: "PATCH",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            // Your patch payload
+            takePhoto: 0,
+          }),
+        }
+      );
+    } catch (error) {
+      console.error("Error during requests:", error);
+    }
+  };
 
   return (
-    <div className="w-full flex justify-center items-center h-screen">
-      <Slider
-        className="max-w-md"
-        color="primary"
-        defaultValue={value}
-        onChangeEnd={setValue}
-        label="Change Brightness"
-        marks={[
-          {
-            value: 20,
-            label: "20%",
-          },
-          {
-            value: 50,
-            label: "50%",
-          },
-          {
-            value: 80,
-            label: "80%",
-          },
-        ]}
-        size="md"
-        step={1}
-      />
+    <div className="flex h-screen items-center justify-center">
+      <Card className="py-4 m-7  w-fit">
+        <CardHeader className="pb-0 pt-2 px-4 flex-col items-start">
+          <p className="text-tiny uppercase font-bold">Image Capture</p>
+          <h4 className="font-bold text-large text-primary">
+            Pahasara's ESP-32 Cam
+          </h4>
+        </CardHeader>
+        <CardBody className="overflow-visible py-2">
+          <Image
+            alt="NextUI hero Image with delay"
+            src={encodedImage}
+            width={500}
+          />{" "}
+        </CardBody>
+        <CardFooter className="flex justify-center">
+          <Button
+            isLoading={capture}
+            className="bg-gradient-to-tl from-primary-500 to-secondary-500 shadow-none text-white "
+            endContent={<MdLinkedCamera />}
+            onPress={handleRequest}
+          >
+            Take a photo
+          </Button>{" "}
+        </CardFooter>
+      </Card>
     </div>
   );
 }
