@@ -10,11 +10,14 @@ import {
 import { MdLinkedCamera } from "react-icons/md";
 
 export default function IndexPage() {
-  const [capture, setCapture] = useState<any>(false);
   const [encodedImage, setEncodedImage] = useState("");
 
   useEffect(() => {
-    handleRequest();
+    setInterval(async () => {
+      let response = await fetchImage();
+
+      setEncodedImage(response);
+    }, 1000);
   }, []);
 
   const fetchImage = async () => {
@@ -26,52 +29,6 @@ export default function IndexPage() {
     const image = `data:image/png;base64,${responseData.base64}`;
     console.log(image == encodedImage);
     return image;
-  };
-
-  const handleRequest = async () => {
-    try {
-      // Send PATCH request
-      await fetch(
-        "https://arduino-led-ed555-default-rtdb.asia-southeast1.firebasedatabase.app/device.json",
-        {
-          method: "PATCH",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-            // Your patch payload
-            takePhoto: 1,
-          }),
-        }
-      );
-
-      setCapture(true);
-      await new Promise((resolve) => setTimeout(resolve, 1000));
-
-      // Send GET request
-      let response = await fetchImage();
-      if (response == encodedImage) {
-        response = await fetchImage();
-      }
-
-      setEncodedImage(response);
-      setCapture(false);
-      await fetch(
-        "https://arduino-led-ed555-default-rtdb.asia-southeast1.firebasedatabase.app/device.json",
-        {
-          method: "PATCH",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-            // Your patch payload
-            takePhoto: 0,
-          }),
-        }
-      );
-    } catch (error) {
-      console.error("Error during requests:", error);
-    }
   };
 
   return (
@@ -90,16 +47,6 @@ export default function IndexPage() {
             width={500}
           />{" "}
         </CardBody>
-        <CardFooter className="flex justify-center">
-          <Button
-            isLoading={capture}
-            className="bg-gradient-to-tl from-primary-500 to-secondary-500 shadow-none text-white "
-            endContent={<MdLinkedCamera />}
-            onPress={handleRequest}
-          >
-            Take a photo
-          </Button>{" "}
-        </CardFooter>
       </Card>
     </div>
   );
