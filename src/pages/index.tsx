@@ -1,13 +1,5 @@
 import { useState, useEffect } from "react";
-import {
-  Image,
-  CardHeader,
-  Card,
-  CardBody,
-  CardFooter,
-  Button,
-} from "@nextui-org/react";
-import { MdLinkedCamera } from "react-icons/md";
+import { Image, CardHeader, Card, CardBody } from "@nextui-org/react";
 
 export default function IndexPage() {
   const [encodedImage, setEncodedImage] = useState("");
