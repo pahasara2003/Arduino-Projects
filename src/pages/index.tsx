@@ -1,13 +1,11 @@
 import { useState, useEffect } from "react";
 import {
-  Slider,
   Image,
   CardHeader,
   Card,
   CardBody,
   CardFooter,
   Button,
-  image,
 } from "@nextui-org/react";
 import { MdLinkedCamera } from "react-icons/md";
 
