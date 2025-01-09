@@ -1,22 +1,12 @@
 import { useState, useEffect } from "react";
-import {
-  Image,
-  CardHeader,
-  Card,
-  CardBody,
-  CardFooter,
-  Button,
-} from "@nextui-org/react";
-import { getDatabase, ref, update, onValue } from "firebase/database";
-// Firebase config (Replace with your own Firebase project configuration)
-// Import the functions you need from the SDKs you need
-import { initializeApp } from "firebase/app";
-import LEDbutton from "@/components/LEDbutton";
-// TODO: Add SDKs for Firebase products that you want to use
-// https://firebase.google.com/docs/web/setup#available-libraries
+import { CardHeader, Card, CardBody, Button } from "@nextui-org/react";
 
-// Your web app's Firebase configuration
-// For Firebase JS SDK v7.20.0 and later, measurementId is optional
+import { getDatabase, ref, update } from "firebase/database";
+
+import { initializeApp } from "firebase/app";
+// import LEDbutton from "@/components/LEDbutton";
+// import { io } from "socket.io-client";
+
 const firebaseConfig = {
   apiKey: "AIzaSyBAn3QkrGRtfQTMlmhr5ojDkr7SHsB5bY0",
   authDomain: "arduino-led-ed555.firebaseapp.com",
@@ -34,7 +24,9 @@ const app = initializeApp(firebaseConfig);
 // Initialize Firebase
 
 export default function IndexPage() {
-  const [encodedImage, setEncodedImage] = useState("");
+  const [imageSrc, setImageSrc] = useState(
+    "https://asia-south1-arduino-led-ed555.cloudfunctions.net/api"
+  );
   const [taking, toggle] = useState(false);
   const db = getDatabase(app);
 
@@ -47,14 +39,22 @@ export default function IndexPage() {
   }, [taking]);
 
   useEffect(() => {
-    setInterval(async () => {
-      const capture = ref(db, "capture/");
-      onValue(capture, (snapshot) => {
-        const data = snapshot.val();
-        const image = `data:image/png;base64,${data.base64}`;
-        setEncodedImage(image);
-      });
-    }, 1000);
+    // Function to update image source
+    const updateImage = () => {
+      const timestamp = new Date().getTime(); // Unique identifier
+      setImageSrc(
+        `https://asia-south1-arduino-led-ed555.cloudfunctions.net/api?t=${timestamp}`
+      );
+    };
+
+    // Initial image load
+    updateImage();
+
+    // Update image every second
+    const interval = setInterval(updateImage, 600);
+
+    // Cleanup interval on component unmount
+    return () => clearInterval(interval);
   }, []);
 
   return (
@@ -63,7 +63,7 @@ export default function IndexPage() {
         <CardHeader className="pb-0 pt-2 px-4 flex-col items-start">
           <p className="text-tiny uppercase font-bold">Image Capture</p>
           <h4 className="font-bold text-[2rem] pb-2  text-primary">
-            Pahasara's ESP-32 Cam
+            ESP-32 Cam
           </h4>
           <Button
             onPress={() => {
@@ -77,15 +77,11 @@ export default function IndexPage() {
           </Button>
         </CardHeader>
         <CardBody className="overflow-visible py-2">
-          <Image
-            alt="NextUI hero Image with delay"
-            src={encodedImage}
-            width={500}
-          />{" "}
+          <img alt="NextUI hero Image with delay" src={imageSrc} width={500} />{" "}
         </CardBody>
-        <CardFooter className="flex gap-3 justify-evenly">
+        {/* <CardFooter className="flex gap-3 justify-evenly">
           {btnList?.map((btn) => <LEDbutton db={db} i={btn} />)}
-        </CardFooter>
+        </CardFooter> */}
       </Card>
     </div>
   );
