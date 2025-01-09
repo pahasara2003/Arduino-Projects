@@ -30,7 +30,7 @@ export default function IndexPage() {
   const [taking, toggle] = useState(false);
   const db = getDatabase(app);
 
-  const btnList = [1, 2, 3, 4, 5];
+  // const btnList = [1, 2, 3, 4, 5];
 
   useEffect(() => {
     update(ref(db, "device"), {
