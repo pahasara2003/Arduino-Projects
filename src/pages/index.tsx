@@ -4,12 +4,17 @@ import { FiCamera, FiCameraOff } from "react-icons/fi";
 import { MdFlashlightOn, MdFlashlightOff } from "react-icons/md";
 
 export default function IndexPage() {
-  const [imageSrc, setImageSrc] = useState(
-    "https://asia-south1-arduino-led-ed555.cloudfunctions.net/api"
-  );
+  const [imageSrc, setImageSrc] = useState("ss.png");
   const [taking, toggle] = useState(false);
   const [flasher, toggleFlasher] = useState(false);
   const [angle, setAngle] = useState<any>(25);
+
+  const validateImage = (url: string, callback: any) => {
+    const img = new Image();
+    img.onload = () => callback(true);
+    img.onerror = () => callback(false);
+    img.src = url;
+  };
 
   useEffect(() => {
     fetch(
@@ -18,19 +23,19 @@ export default function IndexPage() {
   }, [taking, flasher, angle]);
 
   useEffect(() => {
-    const updateImage = () => {
+    const interval = setInterval(() => {
       const timestamp = new Date().getTime(); // Unique identifier
-      setImageSrc(
-        `https://asia-south1-arduino-led-ed555.cloudfunctions.net/api?t=${timestamp}`
-      );
-    };
+      if (taking) {
+        const newImageSrc = `https://asia-south1-arduino-led-ed555.cloudfunctions.net/api?t=${timestamp}`;
 
-    updateImage();
-
-    const interval = setInterval(updateImage, 500);
+        validateImage(newImageSrc, (isValid: boolean) => {
+          setImageSrc(isValid ? newImageSrc : "ss.png");
+        });
+      }
+    }, 500);
 
     return () => clearInterval(interval);
-  }, []);
+  }, [taking]);
 
   return (
     <div className="flex h-screen items-center justify-center">
@@ -65,7 +70,7 @@ export default function IndexPage() {
             </Button>
           </div>
           <Slider
-            className="max-w-md"
+            className="max-w-md my-3"
             color="warning"
             value={angle}
             onChangeEnd={(v) => setAngle(v)}
@@ -78,13 +83,16 @@ export default function IndexPage() {
             step={1}
           />
         </CardHeader>
-        <CardBody className=" py-2 m-3 ">
-          <div className="flex justify-center">
+        <CardBody className=" py-2 h-[300px] ">
+          <div className="flex justify-center h-full ">
             <img
               alt="NextUI hero Image with delay"
-              className="rounded-medium rotate-90"
+              className="rounded-medium rotate-90 w-[300px]"
               src={imageSrc}
               width={400}
+              onEmptied={() => {
+                console.log("SS");
+              }}
             />{" "}
           </div>
         </CardBody>
