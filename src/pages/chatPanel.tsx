@@ -8,7 +8,7 @@ const ChatPanel = () => {
   const [id, setID] = useState<any>("");
 
   useEffect(() => {
-    const socket: Socket = io("http://localhost:3000"); // Replace with your server URL
+    const socket: Socket = io(`http://localhost:3000${id}`); // Replace with your server URL
 
     socket.on("connect", () => {
       setID(socket.id);
