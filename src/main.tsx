@@ -10,7 +10,7 @@ ReactDOM.createRoot(document.getElementById("root")!).render(
   <React.StrictMode>
     <BrowserRouter>
       <Provider>
-        <main className=" text-foreground bg-slate-800">
+        <main className=" text-foreground ">
           <App />
         </main>
       </Provider>

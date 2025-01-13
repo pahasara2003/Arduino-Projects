@@ -38,32 +38,43 @@ const ChatPanel = () => {
   }, []);
 
   return (
-    <div className=" h-full flex justify-center items-center bg-slate-800 ">
+    <div className=" h-screen bg-gradient-to-tr from-pink-100 to-orange-100 flex justify-center items-center pt-0 ">
       <FormModal
         username={username}
         finished={finished}
         finishedConfig={finishedConfig}
         setUsername={setUsername}
       />
-      <div className="w-screen m-0 rounded-none">
-        <div className="w-full flex justify-center py-4  rounded-lg">
-          <AvatarGroup max={3} total={Object.keys(users).length - 1}>
-            {Object.keys(users).map((user: any) => {
-              return (
-                <Avatar
-                  className="w-full"
-                  src={`https://robohash.org/a${user}.png?size=200x200&set=set4`}
-                />
-              );
-            })}
-          </AvatarGroup>
+      <div className="max-md:w-screen  w-[600px] m-0 rounded-none  ">
+        <div className="bg-white">
+          <p className="text-center  font-bold pt-4 text-purple-500">
+            Group Chat
+          </p>
+          <div className="w-full flex justify-center py-3  rounded-lg">
+            <AvatarGroup max={5} total={Object.keys(users).length - 2}>
+              {Object.keys(users).map((user: any) => {
+                return (
+                  <Avatar
+                    className="w-full"
+                    src={`https://robohash.org/a${user}.png?size=200x200&set=set4`}
+                  />
+                );
+              })}
+            </AvatarGroup>
+          </div>
         </div>
         <Chat messages={messages} user={username} />
-        <div className="flex p-3 gap-3  items-center ">
-          <Textarea value={text} onValueChange={(val) => setText(val)} />
+        <div className="flex p-3 gap-3 bg-white   items-center overflow-y-scroll bg-transparent ">
+          <Textarea
+            maxRows={"5" as any}
+            value={text}
+            color="secondary"
+            className="shadow-none"
+            onValueChange={(val) => setText(val)}
+          />
           <Button
             size="sm"
-            className="w-[30px] text-[1.8rem] text-white bg-green-400  h-[60px] rounded-full "
+            className="w-[30px] text-[1.8rem] text-white bg-purple-500  h-[60px] rounded-full "
             onPress={() => {
               socket.emit("message", {
                 user: username,

@@ -1,8 +1,21 @@
 import { Card, CardBody, CardHeader, CardFooter } from "@nextui-org/react";
+import { useRef, useEffect } from "react";
 
 const Chat = ({ messages, user }: any) => {
+  const scrollContainerRef = useRef(null);
+
+  useEffect(() => {
+    const container = scrollContainerRef.current as any;
+    if (container) {
+      container.scrollTop = container.scrollHeight;
+    }
+  }, [messages]);
+
   return (
-    <div className=" h-[70vh] bg-gradient-to-tr p-1 overflow-y-scroll from-pink-500 to-secondary  items-center justify-center">
+    <div
+      ref={scrollContainerRef}
+      className=" h-[70vh] bg-gradient-to-tr p-1 overflow-y-scroll overflow-visible  items-center justify-center"
+    >
       {messages.map((msg: any) => {
         const date = new Date(msg.timestamp); // Convert timestamp to Date object
 
@@ -19,7 +32,7 @@ const Chat = ({ messages, user }: any) => {
         return (
           <>
             <Card
-              className={`shadow-none clear-both rounded-md float-${msg.user == user ? "right" : "left"}  p-0 max-w-[40vw] mx-3 my-1 mb-0 flex `}
+              className={`shadow-none clear-both rounded-lg ${msg.user == user ? "float-right bg-purple-500" : "float-left bg-gray-50"}  p-0 max-w-[40vw] mx-3 my-1 mb-0 flex `}
             >
               <CardHeader className="text-[0.6rem]  text-slate-400 m-0    text-center  px-2   my-1 mb-0 flex pb-0 pt-[0.1rem]">
                 <img
@@ -27,17 +40,19 @@ const Chat = ({ messages, user }: any) => {
                   src={`https://robohash.org/a${msg.user}.png?size=200x200&set=set4`}
                 />
                 <p
-                  className={` ${msg.user == user ? "text-right" : "text-left"} w-full mx-2 `}
+                  className={` ${msg.user == user ? "text-right text-white" : "text-left"} w-full mx-2 `}
                 >
                   {msg.user == user ? "Me" : msg.user}
                 </p>
               </CardHeader>
-              <CardBody className="m-0 pb-0 pt-0 px-3 text-slate-700">
+              <CardBody
+                className={`m-0 pb-0 pt-0 px-3 text-slate-700 ${msg.user == user ? "text-white" : ""}`}
+              >
                 {msg.message}
               </CardBody>
               <CardFooter className="text-[0.6rem]  text-slate-400 m-0   px-2 py-0">
                 <p
-                  className={` ${msg.user == user ? "text-right" : "text-left"} w-full mx-1 pb-1 `}
+                  className={` ${msg.user == user ? "text-right text-white" : "text-left"} w-full mx-1 pb-1 `}
                 >
                   {timeString}
                 </p>{" "}
