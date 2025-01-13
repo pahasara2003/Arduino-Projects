@@ -38,7 +38,7 @@ const ChatPanel = () => {
   }, []);
 
   return (
-    <div className=" h-screen bg-gradient-to-tr from-pink-100 to-orange-100 flex justify-center items-center pt-0 ">
+    <div className=" h-fit bg-gradient-to-r from-violet-300 via-pink-300 to-yellow-200  pt-0 ">
       <FormModal
         username={username}
         finished={finished}
@@ -67,6 +67,7 @@ const ChatPanel = () => {
         <div className="flex p-3 gap-3 bg-white   items-center overflow-y-scroll bg-transparent ">
           <Textarea
             maxRows={"5" as any}
+            size="lg"
             value={text}
             color="secondary"
             className="shadow-none"
@@ -75,7 +76,7 @@ const ChatPanel = () => {
           <Button
             size="sm"
             className="w-[30px] text-[1.8rem] text-white bg-purple-500  h-[60px] rounded-full "
-            onPress={() => {
+            onPressStart={() => {
               socket.emit("message", {
                 user: username,
                 message: text,

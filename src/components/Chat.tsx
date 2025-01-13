@@ -14,7 +14,7 @@ const Chat = ({ messages, user }: any) => {
   return (
     <div
       ref={scrollContainerRef}
-      className=" h-[70vh] bg-gradient-to-tr p-1 overflow-y-scroll overflow-visible  items-center justify-center"
+      className=" h-[65vh] bg-gradient-to-tr p-1 overflow-y-scroll overflow-visible  items-center justify-center"
     >
       {messages.map((msg: any) => {
         const date = new Date(msg.timestamp); // Convert timestamp to Date object
@@ -32,7 +32,7 @@ const Chat = ({ messages, user }: any) => {
         return (
           <>
             <Card
-              className={`shadow-none clear-both rounded-lg ${msg.user == user ? "float-right bg-purple-500" : "float-left bg-gray-50"}  p-0 max-w-[40vw] mx-3 my-1 mb-0 flex `}
+              className={`shadow-none clear-both rounded-lg ${msg.user == user ? "float-right bg-purple-500" : "float-left bg-gray-50"}  p-0 max-w-[40vw] mx-3 my-2 mb-0 flex `}
             >
               <CardHeader className="text-[0.6rem]  text-slate-400 m-0    text-center  px-2   my-1 mb-0 flex pb-0 pt-[0.1rem]">
                 <img
