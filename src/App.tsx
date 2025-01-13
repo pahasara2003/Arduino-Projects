@@ -5,8 +5,8 @@ import ChatPanel from "./pages/chatPanel";
 function App() {
   return (
     <Routes>
-      <Route element={<IndexPage />} path="/" />
-      <Route element={<ChatPanel />} path="/chat" />
+      <Route element={<IndexPage />} path="/esp" />
+      <Route element={<ChatPanel />} path="/" />
     </Routes>
   );
 }
