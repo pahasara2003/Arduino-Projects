@@ -14,7 +14,7 @@ const Chat = ({ messages, user }: any) => {
   return (
     <div
       ref={scrollContainerRef}
-      className=" h-[65vh] bg-gradient-to-tr p-1 overflow-y-scroll overflow-visible  items-center justify-center"
+      className=" h-[70vh] bg-gradient-to-tr p-1 overflow-y-scroll overflow-visible  items-center justify-center"
     >
       {messages.map((msg: any) => {
         const date = new Date(msg.timestamp); // Convert timestamp to Date object

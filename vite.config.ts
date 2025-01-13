@@ -10,8 +10,8 @@ export default defineConfig({
     VitePWA({
       registerType: "autoUpdate",
       manifest: {
-        name: "My PWA App",
-        short_name: "PWA",
+        name: "Pahasara's Chat",
+        short_name: "Chat app",
         description: "A Progressive Web App built with React and Vite",
         theme_color: "#ffffff",
         icons: [
@@ -26,6 +26,10 @@ export default defineConfig({
             type: "image/png",
           },
         ],
+      },
+      workbox: {
+        // Enable service worker for push notifications
+        globPatterns: ["**/*.{html,js,css,png,jpg}"],
       },
     }),
   ],

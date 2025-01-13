@@ -47,7 +47,7 @@ export default function FormModal({
             <ModalFooter>
               <Button
                 className="bg-violet-600"
-                onPress={() => {
+                onPressStart={() => {
                   finishedConfig(true);
                 }}
               >
