@@ -17,11 +17,14 @@ export default function FormModal({
 }: any) {
   return (
     <>
-      <Modal isOpen={!finished} placement="top-center" className="w-[350px]">
+      <Modal isOpen={!finished} placement="center" className=" w-[350px]">
         <ModalContent>
           <>
-            <ModalHeader className=" text-center text-secondary   gap-1">
-              <h1 className="text-center w-full  pt-5"> Setting up...</h1>
+            <ModalHeader className=" text-center   gap-1">
+              <h1 className="text-center w-full text-white font-extrabold text-[1.5rem]  pt-5">
+                {" "}
+                Setting up...
+              </h1>
             </ModalHeader>
             <ModalBody>
               <div className="flex gap-2 flex-col items-center">
@@ -43,7 +46,7 @@ export default function FormModal({
             </ModalBody>
             <ModalFooter>
               <Button
-                color="secondary"
+                className="bg-violet-600"
                 onPress={() => {
                   finishedConfig(true);
                 }}
